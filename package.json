@@ -1,0 +1,43 @@
+{
+    "name": "keep-or-skip",
+    "description": "",
+    "version": "1.0.0",
+    "contributors": [
+      {
+        "name": "Mauro Doganieri",
+        "email": "mauro.doganieri@gmail.com"
+      },
+      {
+        "name": "Nicola Del Gobbo",
+        "email": "nicoladelgobbo@gmail.com"
+      }
+    ],
+    "keywords": [
+      "dynamic",
+      "middleware",
+      "express",
+      "runtime",
+      "conditional",
+      "skip"
+    ],
+    "license": "Apache-2.0",
+    "scripts": {},
+    "engines": {
+      "node": ">= 0.10.0"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/mauro-d/summon-middleware"
+    },
+    "bugs": {
+      "url": "https://github.com/mauro-d/summon-middleware/issues"
+    },
+    "devDependencies": {},
+    "files": [
+      "LICENSE",
+      "README.md",
+      "index.js",
+      "lib/"
+    ]
+  }
+  
