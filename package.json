@@ -1,6 +1,6 @@
 {
     "name": "keep-or-skip",
-    "description": "",
+    "description": "Dynamically execute or skip express middlewares",
     "version": "1.0.0",
     "contributors": [
       {
