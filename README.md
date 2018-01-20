@@ -58,5 +58,68 @@ thrown. In pariticular, the error will be an instance of **KeepOrSkipError**.
 
 ## Examples
 
+Consider the following example:
+
 ```javascript
+const express = require('express')
+const keepOrSkip = require('keep-or-skip')
+
+function m1(req, res, next) {
+    if (!req.middlewares) {
+        req.middlewares = []
+    }
+    req.middlewares.push('executed m1')
+    next()
+}
+
+function m2(req, res, next) {
+    if (!req.middlewares) {
+        req.middlewares = []
+    }
+    req.middlewares.push('executed m2')
+    next()
+}
+
+function respond(req, res, next) {
+    if (!req.middlewares) {
+        req.middlewares = []
+    }
+    req.middlewares.push('executed respond')
+    res.status(200).json({
+        middlewares: req.middlewares
+    })
+}
+
+let maybeObj = {
+    1: [m1, respond],
+    2: [m1, m2, respond],
+    3: [respond]
+}
+
+app.get('/kos', keepOrSkip(maybeObj, (req, res, next) => {
+    if (req.query.value === 'one') {
+        // Execute the set of middlewares in maybeObj[1]
+        return 1
+    } else if (req.query.value === 'two') {
+        // Execute the set of middlewares in maybeObj[2]
+        return 2
+    } else {
+        // Execute the set of middlewares in maybeObj[3]
+        return 3
+    }
+}))
+
+app.listen(3000)
+```
+
+`http://127.0.0.1/kos?value=two` will produce the following result:
+
+```json
+{
+    "middlewares": [
+        "executed m1",
+        "executed m2",
+        "executed respond"
+    ]
+}
 ```
