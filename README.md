@@ -58,7 +58,8 @@ thrown. In pariticular, the error will be an instance of **KeepOrSkipError**.
 
 ## Examples
 
-Consider the following example:
+Consider the following example(all the middlewares defined have demonstration
+purposes only):
 
 ```javascript
 const express = require('express')
@@ -81,45 +82,60 @@ function m2(req, res, next) {
 }
 
 function respond(req, res, next) {
-    if (!req.middlewares) {
-        req.middlewares = []
-    }
-    req.middlewares.push('executed respond')
     res.status(200).json({
         middlewares: req.middlewares
     })
 }
 
-let maybeObj = {
-    1: [m1, respond],
-    2: [m1, m2, respond],
-    3: [respond]
+function setRandomValue(req, res, next) {
+    var max = 5
+    var min = -5
+    req.random = Math.random() * (max - min) + min
+    next()
 }
 
-app.get('/kos', keepOrSkip(maybeObj, (req, res, next) => {
-    if (req.query.value === 'one') {
-        // Execute the set of middlewares in maybeObj[1]
-        return 1
-    } else if (req.query.value === 'two') {
-        // Execute the set of middlewares in maybeObj[2]
-        return 2
-    } else {
-        // Execute the set of middlewares in maybeObj[3]
-        return 3
-    }
-}))
+let maybeObj = {
+    1: [m2, m1, m2],
+    2: [m1, m2]
+}
+
+app.get('/random',
+    setRandomValue,
+    keepOrSkip(maybeObj, (req, res) => {
+        if (req.random < 0) {
+            // Execute the set of middlewares in maybeObj[1]
+            return 1
+        } else {
+            // Execute the set of middlewares in maybeObj[2]
+            return 2
+        }
+    }),
+    respond
+)
 
 app.listen(3000)
 ```
 
-`http://127.0.0.1/kos?value=two` will produce the following result:
+`http://localhost:3000/random` will produce the following result if the random
+value is lower than 0:
+
+```json
+{
+    "middlewares": [
+        "executed m2",
+        "executed m1",
+        "executed m2"
+    ]
+}
+```
+
+otherwise it will produce:
 
 ```json
 {
     "middlewares": [
         "executed m1",
-        "executed m2",
-        "executed respond"
+        "executed m2"
     ]
 }
 ```
