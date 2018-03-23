@@ -42,16 +42,15 @@ npm install keep-or-skip --save
 ## Type signature
 
 ```javascript
-keepOrSkip(maybeObj, predicate)
+keepOrSkip(middlewares, predicate)
 ```
 
-- `maybeObj` {Object} an object whose fields are each an array containing one or
-more express middlewares.
-- `predicate` {Function} a middleware that returns a `maybeObj`'s property 
-representing the set of middlewares to use.
-- **returns** an array of wrapped middlewares representing all the middlewares
-cointained in the `maybeObj` param which are executed or skipped based on the
-value returned by the `predicate` param.
+- `middlewares` {Function|Function[]} A middleware or an array of middlewares
+to handle dynamically.
+- `predicate` {Function} A function that returns a boolean value, by which,
+one or more middlewares will be executed or skipped. This function takes as
+input two *optional* parameters, the `request` and the `response` objects.
+- **returns** An array of wrapped middlewares.
 
 If the parameters' type does not match with those required, an error will be
 thrown. In pariticular, the error will be an instance of **KeepOrSkipError**.
