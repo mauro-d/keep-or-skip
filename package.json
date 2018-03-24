@@ -1,43 +1,48 @@
 {
-    "name": "keep-or-skip",
-    "description": "Dynamically execute or skip express middlewares",
-    "version": "1.0.0",
-    "contributors": [
-      {
-        "name": "Mauro Doganieri",
-        "email": "mauro.doganieri@gmail.com"
-      },
-      {
-        "name": "Nicola Del Gobbo",
-        "email": "nicoladelgobbo@gmail.com"
-      }
-    ],
-    "keywords": [
-      "dynamic",
-      "middleware",
-      "express",
-      "runtime",
-      "conditional",
-      "skip"
-    ],
-    "license": "Apache-2.0",
-    "scripts": {},
-    "engines": {
-      "node": ">= 0.10.0"
+  "name": "keep-or-skip",
+  "description": "Dynamically execute or skip express middlewares",
+  "version": "1.0.0",
+  "contributors": [
+    {
+      "name": "Mauro Doganieri",
+      "email": "mauro.doganieri@gmail.com"
     },
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/mauro-d/keep-or-skip"
-    },
-    "bugs": {
-      "url": "https://github.com/mauro-d/keep-or-skip/issues"
-    },
-    "devDependencies": {},
-    "files": [
-      "LICENSE",
-      "README.md",
-      "index.js",
-      "lib/"
-    ]
-  }
-  
+    {
+      "name": "Nicola Del Gobbo",
+      "email": "nicoladelgobbo@gmail.com"
+    }
+  ],
+  "keywords": [
+    "dynamic",
+    "middleware",
+    "express",
+    "runtime",
+    "conditional",
+    "skip"
+  ],
+  "license": "Apache-2.0",
+  "scripts": {
+    "test": "node node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=__test__/jasmine.json"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mauro-d/keep-or-skip"
+  },
+  "bugs": {
+    "url": "https://github.com/mauro-d/keep-or-skip/issues"
+  },
+  "devDependencies": {
+    "express": "^4.16.3",
+    "jasmine": "^3.1.0",
+    "supertest": "^3.0.0"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "index.js",
+    "lib/"
+  ]
+}
