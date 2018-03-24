@@ -1,0 +1,8 @@
+# Remove all IntelliJ Idea IDE meta files
+.idea
+# Remove all VSCode meta files
+.vscode
+# Remove all node_modules
+node_modules
+# Remove all debug loggin file created by node
+npm-debug.log
