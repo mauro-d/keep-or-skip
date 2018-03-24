@@ -50,7 +50,7 @@ to handle dynamically.
 - `predicate` {Function} A function that returns a boolean value, by which,
 one or more middlewares will be executed or skipped. This function takes as
 input two *optional* parameters, the `request` and the `response` objects.
-- **returns** An array of wrapped middlewares.
+- **returns** An array of middlewares.
 
 If the parameters' type does not match with those required, an error will be
 thrown. In pariticular, the error will be an instance of **KeepOrSkipError**.
@@ -93,21 +93,23 @@ function setRandomValue(req, res, next) {
     next()
 }
 
-let maybeObj = {
-    1: [m2, m1, m2],
-    2: [m1, m2]
-}
-
 app.get('/random',
     setRandomValue,
-    keepOrSkip(maybeObj, (req, res) => {
+    keepOrSkip([m2, m1, m2], (req, res) => {
         if (req.random < 0) {
-            // Execute the set of middlewares in maybeObj[1]
-            return 1
-        } else {
-            // Execute the set of middlewares in maybeObj[2]
-            return 2
+            // Execute [m2, m1, m2]
+            return true
         }
+        // Skip [m2, m1, m2]
+        return false
+    }),
+    keepOrSkip([m1, m2], (req, res) => {
+        if (req.random >= 0) {
+            // Execute [m1, m2]
+            return true
+        }
+        // Skip [m1, m2]
+        return false
     }),
     respond
 )
