@@ -47,7 +47,7 @@ keepOrSkip(middlewares, predicate)
 
 - `middlewares` {Function|Function[]} A middleware or an array of middlewares
 to handle dynamically.
-- `predicate` {Function} A function that returns a boolean value, by which,
+- `predicate` {Function} A function that returns a *boolean* value, by which,
 one or more middlewares will be executed or skipped. This function takes as
 input two *optional* parameters, the `request` and the `response` objects.
 - **returns** An array of middlewares.
