@@ -219,4 +219,33 @@ describe('keep-or-skip module', function () {
             })
     })
 
+    /* it('test warning', function (done) {
+        var app = express()
+        var kosArr1 = keepOrSkip(arr1, (req, res) => {
+            if (req.value < 0) {
+                return true
+            }
+            //return false
+        })
+        app.get('/',
+            setValue(1),
+            kosArr1, // should skip
+            saveMiddlewares('third'),
+            clear,
+            respond
+        )
+        return request(app)
+            .get('/')
+            .set('Accept', 'application/json')
+            .expect(200)
+            .end(function (err, res) {
+                console.log('#################################################')
+                console.log('body =>', res.body)
+                if (err) {
+                    done(err)
+                }
+                done()
+            })
+    }) */
+
 })
