@@ -51,7 +51,7 @@ to handle dynamically.
 one or more middlewares will be executed or skipped. This function takes as
 input two *optional* parameters, the `request` and the `response` objects.
 - `debug` {Boolean} An *optional* boolean parameter to enable a warning log
-which notify that the predicate parameter doesn't return a boolean value.
+which notifies that the predicate parameter doesn't return a boolean value.
 In such a case the middleware/middlewares contained in the middlewares parameter
 will be skipped.
 - **returns** An array of middlewares.
