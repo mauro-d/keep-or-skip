@@ -42,18 +42,12 @@ npm install keep-or-skip --save
 ## Type signature
 
 ```javascript
-keepOrSkip(middlewares, predicate)
+keepOrSkip(middlewares, predicate[, debug])
 ```
 
-- `middlewares` {Function|Function[]} A middleware or an array of middlewares
-to handle dynamically.
-- `predicate` {Function} A function that returns a *boolean* value, by which,
-one or more middlewares will be executed or skipped. This function takes as
-input two *optional* parameters, the `request` and the `response` objects.
-- `debug` {Boolean} An *optional* boolean parameter to enable a warning log
-which notifies that the predicate parameter doesn't return a boolean value.
-In such a case the middleware/middlewares contained in the middlewares parameter
-will be skipped.
+- `middlewares` &lt;Function&gt; | &lt;Function[]&gt; A middleware or an array of middlewares to handle dynamically.
+- `predicate` &lt;Function&gt; A function that returns a *boolean* value, by which, one or more middlewares will be executed or skipped. This function takes as input two *optional* parameters, the `request` and the `response` objects. If the predicate doesn't return a boolean value, the middleware/middlewares contained in the `middlewares` parameter will be skipped.
+- `debug` &lt;Boolean&gt; An *optional* boolean parameter to enable a warning log which notifies that the `predicate` parameter doesn't return a boolean value.
 - **returns** An array of middlewares.
 
 If the parameters' type does not match with those required, an error will be
@@ -144,3 +138,5 @@ otherwise it will produce:
     ]
 }
 ```
+
+### Debug
