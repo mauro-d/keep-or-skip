@@ -70,8 +70,8 @@ function respond(req, res, next) {
     res.status(200).json(req.savedMiddlewares)
 }
 
-let arr1 = [m1, m2, m1]
-let arr2 = [m2, m2]
+var arr1 = [m1, m2, m1]
+var arr2 = [m2, m2]
 
 // keep-or-skip module will throw an error if the "middlewares" parameter has
 // the following values
@@ -116,7 +116,7 @@ describe('keep-or-skip module', function () {
      * Testing middlewares parameter
      */
     for (var i = 0; i < mi.length; i++) {
-        (function test(input) {
+        (function testMiddlewares(input) {
             it('should throw KeepOrSkipError - ' + ec.INVALID_MIDDLEWARES_PARAM.message, function () {
                 expect(function () {
                     var app = express()
@@ -131,7 +131,7 @@ describe('keep-or-skip module', function () {
      * Testing predicate parameter
      */
     for (var i = 0; i < pi.length; i++) {
-        (function test(input) {
+        (function testPredicate(input) {
             it('should throw KeepOrSkipError - ' + ec.INVALID_PREDICATE_PARAM.message, function () {
                 expect(function () {
                     var app = express()
@@ -176,12 +176,19 @@ describe('keep-or-skip module', function () {
             clear,
             respond
         )
+        var checkProp = function checkProp(res, prop, arr) {
+            for (var i = 0; i < res.body[prop].length; i++) {
+                if (arr[i].name !== res.body[prop][i]) {
+                    return true
+                }
+            }
+            return false
+        }
         return request(app)
             .get('/')
             .set('Accept', 'application/json')
             .expect(200)
             .end(function (err, res) {
-                console.log('body =>', res.body)
                 if (err) {
                     done(err)
                 }
@@ -193,22 +200,10 @@ describe('keep-or-skip module', function () {
                 } else {
                     for (var prop in res.body) {
                         if (prop === 'first') {
-                            console.log('FIRST')
-                            res.body[prop].forEach(function (el, i) {
-                                console.log('arr2[' + i + '].name =>', arr2[i].name, 'el =>', el)
-                                if (arr2[i].name !== el) {
-                                    error = true
-                                }
-                            })
+                            error = checkProp(res, prop, arr2)
                         }
                         if (prop === 'second' || prop === 'third') {
-                            console.log('SECOND OR THIRD')
-                            res.body[prop].forEach(function (el, i) {
-                                console.log('arr1[' + i + '].name =>', arr1[i].name, 'el =>', el)
-                                if (arr1[i].name !== el) {
-                                    error = true
-                                }
-                            })
+                            error = checkProp(res, prop, arr1)
                         }
                     }
                 }
@@ -218,34 +213,5 @@ describe('keep-or-skip module', function () {
                 done()
             })
     })
-
-    /* it('test warning', function (done) {
-        var app = express()
-        var kosArr1 = keepOrSkip(arr1, (req, res) => {
-            if (req.value < 0) {
-                return true
-            }
-            //return false
-        })
-        app.get('/',
-            setValue(1),
-            kosArr1, // should skip
-            saveMiddlewares('third'),
-            clear,
-            respond
-        )
-        return request(app)
-            .get('/')
-            .set('Accept', 'application/json')
-            .expect(200)
-            .end(function (err, res) {
-                console.log('#################################################')
-                console.log('body =>', res.body)
-                if (err) {
-                    done(err)
-                }
-                done()
-            })
-    }) */
 
 })
