@@ -1,4 +1,4 @@
-# keep-or-skip (WIP)
+# keep-or-skip
 
 ## Dynamically execute or skip express middlewares
 
@@ -12,7 +12,7 @@ You can choose one of the following methods:
 
 ### First method
 
-In your package.json add the following item to get the latest available version:
+In your *package.json* add the following item to get the latest available version:
 
 ```json
 "keep-or-skip": "*"
@@ -145,7 +145,7 @@ In the case the `predicate` parameter doesn't return a boolean value, the
 middleware/middlewares contained in the `middlewares` parameter will be skipped.
 In this situation, it's possible to log a warning by using the debug mode.
 
-It's possible to activate a debug globally, directly on the imported module:
+It's possible to activate the debug globally, directly on the imported module:
 
 ```javascript
 const keepOrSkip = require('keep-or-skip')
@@ -153,7 +153,7 @@ keepOrSkip.debug(true)
 ```
 
 the above code will set the debug mode to *true* every time `keepOrSkip` will be
-used, unless otherwise specified at the time of use, as shown in the following
+used, unless otherwise specified at the time of use as shown in the following
 example:
 
 ```javascript
@@ -166,7 +166,7 @@ keepOrSkip.debug(true)
  * Specifying the debug parameter at the time of use will overwrite the global debug variable.
  */
 
-keepOrSkip(myMiddlewares, myPredicate, false) // Debug off
+keepOrSkip(myMiddlewares, myPredicate, false) // Debug OFF.
 
-keepOrSkip(myMiddlewares, myPredicate) // Debug on because of the global debug variable.
+keepOrSkip(myMiddlewares, myPredicate) // Debug ON because of the global debug variable.
 ```
