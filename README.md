@@ -22,7 +22,7 @@ or, if you need a specific version, just add an item like the following,
 specifying the version number:
 
 ```json
-"keep-or-skip": "1.0.0"
+"keep-or-skip": "1.0.1"
 ```
 
 then launch this command:

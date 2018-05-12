@@ -1,7 +1,7 @@
 {
   "name": "keep-or-skip",
   "description": "Dynamically execute or skip express middlewares",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "contributors": [
     {
       "name": "Mauro Doganieri",
@@ -22,7 +22,9 @@
   ],
   "license": "Apache-2.0",
   "scripts": {
-    "test": "node node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=__test__/jasmine.json"
+    "test": "node node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=__test__/jasmine.json",
+    "test-travis": "node node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=__test__/jasmine.json",
+    "test-appveyor": "node ./node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=__test__/jasmine.json"
   },
   "engines": {
     "node": ">= 0.10.0"
