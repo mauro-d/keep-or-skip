@@ -6,11 +6,15 @@ This wrapper allows you to choose one or more middlewares to execute based on a
 certain condition. The aforementioned condition could be, for instance, a
 specific request value.
 
+<br/>
+
 <div align="center">
+
 [![Build Status](https://travis-ci.org/mauro-d/keep-or-skip.svg?branch=master)](https://travis-ci.org/mauro-d/keep-or-skip)
 [![Build status](https://ci.appveyor.com/api/projects/status/m8de0gc397tcceq5?svg=true)](https://ci.appveyor.com/project/mauro-d/keep-or-skip)
 [![NPM version](https://img.shields.io/npm/v/keep-or-skip.svg?style=flat)](https://www.npmjs.com/package/keep-or-skip)
 [![NPM downloads](https://img.shields.io/npm/dm/keep-or-skip.svg?style=flat)](https://www.npmjs.com/package/keep-or-skip)
+
 </div>
 
 ## Installation
