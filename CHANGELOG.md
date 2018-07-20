@@ -1,3 +1,7 @@
+# 1.0.2 / 2018-07-20
+
+* Fixed middleware skipping.
+
 # 1.0.1 / 2018-05-12
 
 * Added support for CI.
