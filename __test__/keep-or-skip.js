@@ -117,7 +117,7 @@ describe('keep-or-skip module', function () {
      */
     for (var i = 0; i < mi.length; i++) {
         (function testMiddlewares(input) {
-            it('should throw KeepOrSkipError - ' + ec.INVALID_MIDDLEWARES_PARAM.message, function () {
+            it('should throw an error about invalid middlewares param', function () {
                 expect(function () {
                     var app = express()
                     app.use(keepOrSkip(input, function () { }))
@@ -132,7 +132,7 @@ describe('keep-or-skip module', function () {
      */
     for (var i = 0; i < pi.length; i++) {
         (function testPredicate(input) {
-            it('should throw KeepOrSkipError - ' + ec.INVALID_PREDICATE_PARAM.message, function () {
+            it('should throw an error about invalid predicate param', function () {
                 expect(function () {
                     var app = express()
                     app.use(keepOrSkip(function () { }, input))
@@ -147,18 +147,8 @@ describe('keep-or-skip module', function () {
      */
     it('should throw an error', function (done) {
         var app = express()
-        var kosArr1 = keepOrSkip(arr1, (req, res) => {
-            if (req.value < 0) {
-                return true
-            }
-            return false
-        })
-        var kosArr2 = keepOrSkip(arr2, (req, res) => {
-            if (req.value >= 0) {
-                return true
-            }
-            return false
-        })
+        var kosArr1 = keepOrSkip(arr1, req => req.value < 0)
+        var kosArr2 = keepOrSkip(arr2, req => req.value >= 0)
         app.get('/',
             setValue(1),
             kosArr1, // should skip
