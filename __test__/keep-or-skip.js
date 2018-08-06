@@ -29,10 +29,6 @@ var KeepOrSkipError = require('../lib/error/KeepOrSkipError')
 var ec = KeepOrSkipError.codes
 
 var utils = require('../lib/utils')
-var noop = utils.noop
-var isFunction = utils.isFunction
-var isBoolean = utils.isBoolean
-var log = utils.log
 var checkDebug = utils.checkDebug
 
 function m1(req, res, next) {
