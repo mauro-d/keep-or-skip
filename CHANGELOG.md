@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3 / 2018-08-06
+
+* Optimizations and refactor.
+
+* Added tests for *checkDebug* utility function.
+
 ## 1.0.2 / 2018-07-20
 
 * Fixed condition in *wrap* function to ensure the skipping/execution of the middlewares.
