@@ -33,7 +33,7 @@ or, if you need a specific version, just add an item like the following,
 specifying the version number:
 
 ```json
-"keep-or-skip": "1.0.2"
+"keep-or-skip": "1.0.3"
 ```
 
 then launch this command:
