@@ -72,6 +72,7 @@ purposes only):
 ```javascript
 const express = require('express')
 const keepOrSkip = require('keep-or-skip')
+const app = express()
 
 function m1(req, res, next) {
     if (!req.middlewares) {
