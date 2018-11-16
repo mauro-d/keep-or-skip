@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.4 / 2018-11-16
+
+* Added *return* on wrapped middleware call.
+
 ## 1.0.3 / 2018-08-06
 
 * Optimizations and refactor.
