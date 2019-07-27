@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.5 / 2019-07-27
+
+* Library refactor.
+
+* Simplified the usage example.
+
 ## 1.0.4 / 2018-11-16
 
 * Added *return* on wrapped middleware call.
