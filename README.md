@@ -74,61 +74,45 @@ const keepOrSkip = require('keep-or-skip')
 
 const app = express()
 
-function init(req, res, next) {
-    const min = -5
-    const max = 5
-    req.value = Math.floor(Math.random() * (max - min) + min)
-    req.middlewares = []
+function setValue(req, res, next) {
+    req.value = 0
+    req.messages = []
     next()
 }
 
-function m1(req, res, next) {
-    req.middlewares.push('executed m1')
+function middlewareOne(req, res, next) {
+    req.messages.push('Hi from middlewareOne')
     next()
 }
 
-function m2(req, res, next) {
-    req.middlewares.push('executed m2')
+function middlewareTwo(req, res, next) {
+    req.messages.push('Hi from middlewareTwo')
     next()
 }
 
 function respond(req, res, next) {
     res.status(200).json({
-        value: req.value,
-        middlewares: req.middlewares
+        messages: req.messages
     })
 }
 
 app.get('/',
-    init,
-    keepOrSkip([m2, m1, m2], req => req.value < 0 ? true : false),
-    keepOrSkip([m1, m2], req => req.value >= 0 ? true : false),
+    setValue,
+    keepOrSkip(middlewareOne, req => req.value < 0 ? true : false),
+    keepOrSkip(middlewareTwo, req => req.value >= 0 ? true : false),
     respond
 )
 
 app.listen(3000)
 ```
 
-`http://localhost:3000` will produce the following `middlewares` array if the
-random value is lower than 0:
+`http://localhost:3000` will produce the following result. `middlewareOne` is
+skipped and `middlewareTwo` is executed:
 
 ```json
 {
-    "middlewares": [
-        "executed m2",
-        "executed m1",
-        "executed m2"
-    ]
-}
-```
-
-otherwise it will produce:
-
-```json
-{
-    "middlewares": [
-        "executed m1",
-        "executed m2"
+    "messages": [
+        "Hi from middlewareTwo"
     ]
 }
 ```
