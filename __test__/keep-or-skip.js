@@ -28,99 +28,51 @@ var keepOrSkip = require('../')
 var KeepOrSkipError = require('../lib/error/KeepOrSkipError')
 var ec = KeepOrSkipError.codes
 
-var utils = require('../lib/utils')
-var checkDebug = utils.checkDebug
+describe('testing input parameters', function () {
 
-function m1(req, res, next) {
-    if (!req.middlewares) {
-        req.middlewares = []
-    }
-    req.middlewares.push('m1')
-    next()
-}
+    // keep-or-skip module will throw an error if the "middlewares" parameter has
+    // the following values
+    var mi = [
+        undefined,
+        null,
+        '',
+        true,
+        false,
+        'string',
+        11,
+        {},
+        [],
+        [undefined],
+        [null],
+        [''],
+        [true],
+        [false],
+        ['string'],
+        [11],
+        [{}],
+        [[]]
+    ]
 
-function m2(req, res, next) {
-    if (!req.middlewares) {
-        req.middlewares = []
-    }
-    req.middlewares.push('m2')
-    next()
-}
-
-function saveMiddlewares(key) {
-    return function (req, res, next) {
-        if (!req.savedMiddlewares) {
-            req.savedMiddlewares = {}
-        }
-        req.savedMiddlewares[key] = req.middlewares
-        next()
-    }
-}
-
-function clear(req, res, next) {
-    req.middlewares = []
-    next()
-}
-
-function setValue(number) {
-    return function (req, res, next) {
-        req.value = number
-        next()
-    }
-}
-
-function respond(req, res, next) {
-    res.status(200).json(req.savedMiddlewares)
-}
-
-var arr1 = [m1, m2, m1]
-var arr2 = [m2, m2]
-
-// keep-or-skip module will throw an error if the "middlewares" parameter has
-// the following values
-var mi = [
-    undefined,
-    null,
-    '',
-    true,
-    false,
-    'string',
-    11,
-    {},
-    [],
-    [undefined],
-    [null],
-    [''],
-    [true],
-    [false],
-    ['string'],
-    [11],
-    [{}],
-    [[]]
-]
-
-// keep-or-skip module will throw an error if the "predicate" parameter has
-// the following values
-var pi = [
-    undefined,
-    null,
-    '',
-    true,
-    false,
-    'string',
-    11,
-    {},
-    []
-]
-
-describe('keep-or-skip module', function () {
+    // keep-or-skip module will throw an error if the "predicate" parameter has
+    // the following values
+    var pi = [
+        undefined,
+        null,
+        '',
+        true,
+        false,
+        'string',
+        11,
+        {},
+        []
+    ]
 
     /**
-     * Testing middlewares parameter
+     * Testing the middlewares parameter
      */
     for (var i = 0; i < mi.length; i++) {
         (function testMiddlewares(input) {
-            it('should throw an error about invalid middlewares param', function () {
+            it('should throw an error about invalid middlewares param: ' + input, function () {
                 expect(function () {
                     var app = express()
                     app.use(keepOrSkip(input, function () { }))
@@ -131,11 +83,11 @@ describe('keep-or-skip module', function () {
     }
 
     /**
-     * Testing predicate parameter
+     * Testing the predicate parameter
      */
     for (var i = 0; i < pi.length; i++) {
         (function testPredicate(input) {
-            it('should throw an error about invalid predicate param', function () {
+            it('should throw an error about invalid predicate param: ' + input, function () {
                 expect(function () {
                     var app = express()
                     app.use(keepOrSkip(function () { }, input))
@@ -145,38 +97,65 @@ describe('keep-or-skip module', function () {
         })(pi[i])
     }
 
-    /**
-     * Testing middleware execution
-     */
-    it('should throw an error', function (done) {
+})
+
+describe('testing the middlewares execution', function () {
+
+    function init(req, res, next) {
+        req.middlewares = []
+        next()
+    }
+
+    function setValue(number) {
+        return function (req, res, next) {
+            req.value = number
+            next()
+        }
+    }
+
+    function makeMiddleware(name) {
+        return function middleware(req, res, next) {
+            req.middlewares.push(name)
+            next()
+        }
+    }
+
+    function respond(req, res, next) {
+        res.status(200).json(req.middlewares)
+    }
+
+    it('should throw an error if the middleware execution sequence is incorrect', function (done) {
         var app = express()
-        var kosArr1 = keepOrSkip(arr1, req => req.value < 0)
-        var kosArr2 = keepOrSkip(arr2, req => req.value >= 0)
+        var m1 = makeMiddleware('m1')
+        var m2 = makeMiddleware('m2')
+        var wm1 = keepOrSkip(m1, req => req.value < 0)
+        var wm2 = keepOrSkip(m2, req => req.value >= 0)
+        var seq = ['m1', 'm1', 'm2', 'm1', 'm2', 'm2', 'm1']
+
         app.get('/',
-            setValue(1),
-            kosArr1, // should skip
-            kosArr2, // should execute
-            saveMiddlewares('first'),
-            clear,
+            init,
             setValue(-1),
-            kosArr1, // should execute
-            kosArr2, // should skip
-            saveMiddlewares('second'),
-            clear,
-            kosArr1, // should execute
-            kosArr2, // should skip
-            saveMiddlewares('third'),
-            clear,
+            wm1, // run
+            wm2, // skip
+            wm1, // run
+            wm2, // skip
+            setValue(0),
+            wm1, // skip
+            wm2, // run
+            setValue(-1),
+            wm1, // run
+            wm2, // skip
+            setValue(0),
+            wm1, // skip
+            wm2, // run
+            wm1, // skip
+            wm2, // run
+            setValue(-1),
+            wm1, // run
+            wm2, // skip
             respond
         )
-        var checkProp = function checkProp(res, prop, arr) {
-            for (var i = 0; i < res.body[prop].length; i++) {
-                if (arr[i].name !== res.body[prop][i]) {
-                    return true
-                }
-            }
-            return false
-        }
+
         return request(app)
             .get('/')
             .set('Accept', 'application/json')
@@ -185,43 +164,130 @@ describe('keep-or-skip module', function () {
                 if (err) {
                     done(err)
                 }
-                var error = false
-                if (!(res.body.first && res.body.first.length === arr2.length &&
-                    res.body.second && res.body.second.length === arr1.length &&
-                    res.body.third && res.body.third.length === arr1.length)) {
-                    error = true
-                } else {
-                    for (var prop in res.body) {
-                        if (prop === 'first') {
-                            error = checkProp(res, prop, arr2)
-                        }
-                        if (prop === 'second' || prop === 'third') {
-                            error = checkProp(res, prop, arr1)
-                        }
-                    }
-                }
-                if (error) {
-                    done(new Error('Wrong result'))
+                if (seq.toString() !== res.body.toString()) {
+                    done(new Error('Wrong middleware execution sequence'))
                 }
                 done()
             })
     })
 
-    describe('testing checkDebug utility function', function () {
+})
 
-        it('should return true', function () {
-            expect(checkDebug(true, true)).toBeTruthy()
-        })
-        it('should return true because global is false but local is true', function () {
-            expect(checkDebug(true, false)).toBeTruthy()
-        })
-        it('should return false because local prevails on global', function () {
-            expect(checkDebug(false, true)).toBeFalsy()
-        })
-        it('should return false', function () {
-            expect(checkDebug(false, false)).toBeFalsy()
-        })
+describe('testing the warning message', function () {
 
+    var app, middlewares
+
+    beforeEach(function () {
+        keepOrSkip.debug(false)
+        app = express()
+        middlewares = [
+            hookStdOut,
+            unhookStdOut,
+            respond
+        ]
+    })
+
+    var warningMsg = 'KeepOrSkipWarning: The predicate parameter' +
+        ' doesn\'t return a boolean value,' +
+        ' midllewares will be skipped.'
+
+    function hookStream(stream, fn) {
+        var oldWrite = stream.write
+        stream.write = fn
+        return function () {
+            stream.write = oldWrite
+        }
+    }
+
+    function hookStdOut(req, res, next) {
+        req.unhookStdout = hookStream(process.stdout, function (string, encoding, fd) {
+            req.log = string
+        })
+        next()
+    }
+
+    function unhookStdOut(req, res, next) {
+        req.unhookStdout()
+        next()
+    }
+
+    function testMiddleware(req, res, next) {
+        next()
+    }
+
+    function respond(req, res, next) {
+        res.send(req.log)
+    }
+
+    function noop() { }
+
+    it('should respond with an empty string - global:false/local:undefined', function (done) {
+        var middleware = keepOrSkip(testMiddleware, noop)
+        middlewares.splice(1, 0, middleware)
+        app.get('/', middlewares)
+        return request(app)
+            .get('/')
+            .expect(
+                200,
+                '',
+                done
+            )
+    })
+
+    it('should respond with an empty string - global:false/local:false', function (done) {
+        keepOrSkip.debug(false)
+        var middleware = keepOrSkip(testMiddleware, noop, false)
+        middlewares.splice(1, 0, middleware)
+        app.get('/', middlewares)
+        return request(app)
+            .get('/')
+            .expect(
+                200,
+                '',
+                done
+            )
+    })
+
+    it('should respond with a warning message - global:true/local:undefined', function (done) {
+        keepOrSkip.debug(true)
+        var middleware = keepOrSkip(testMiddleware, noop)
+        middlewares.splice(1, 0, middleware)
+        app.get('/', middlewares)
+        return request(app)
+            .get('/')
+            .expect(
+                200,
+                warningMsg,
+                done
+            )
+    })
+
+    it('should respond with a warning message - global:true/local:true', function (done) {
+        keepOrSkip.debug(true)
+        var middleware = keepOrSkip(testMiddleware, noop, true)
+        middlewares.splice(1, 0, middleware)
+        app.get('/', middlewares)
+        return request(app)
+            .get('/')
+            .expect(
+                200,
+                warningMsg,
+                done
+            )
+    })
+
+    it('should respond with a warning message - global:false/local:true', function (done) {
+        keepOrSkip.debug(false)
+        var middleware = keepOrSkip(testMiddleware, noop, true)
+        middlewares.splice(1, 0, middleware)
+        app.get('/', middlewares)
+        return request(app)
+            .get('/')
+            .expect(
+                200,
+                warningMsg,
+                done
+            )
     })
 
 })
