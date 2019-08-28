@@ -1,10 +1,10 @@
 # Changelog
 
-## 1.0.5 / 2019-07-27
+## 1.0.5 / 2019-08-28
 
 * Library refactor.
 
-* Simplified the usage example.
+* Improved tests.
 
 ## 1.0.4 / 2018-11-16
 
