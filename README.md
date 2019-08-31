@@ -106,7 +106,7 @@ app.get('/',
 app.listen(3000)
 ```
 
-`http://localhost:3000` will produce the following result. `middlewareOne` is
+`http://localhost:3000` will produce the following result, `middlewareOne` is
 skipped and `middlewareTwo` is executed:
 
 ```json
