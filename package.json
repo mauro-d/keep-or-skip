@@ -37,9 +37,9 @@
     "url": "https://github.com/mauro-d/keep-or-skip/issues"
   },
   "devDependencies": {
-    "express": "^4.16.3",
-    "jasmine": "^3.1.0",
-    "supertest": "^3.0.0"
+    "express": "^4.17.1",
+    "jasmine": "^3.4.0",
+    "supertest": "^4.0.2"
   },
   "files": [
     "LICENSE",
