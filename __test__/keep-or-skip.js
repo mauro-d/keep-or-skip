@@ -262,6 +262,20 @@ describe('testing the warning message', function () {
             )
     })
 
+    it('should respond with a warning message - global:true/local:false', function (done) {
+        keepOrSkip.debug(true)
+        var middleware = keepOrSkip(testMiddleware, noop, false)
+        middlewares.splice(1, 0, middleware)
+        app.get('/', middlewares)
+        return request(app)
+            .get('/')
+            .expect(
+                200,
+                '',
+                done
+            )
+    })
+
     it('should respond with a warning message - global:true/local:true', function (done) {
         keepOrSkip.debug(true)
         var middleware = keepOrSkip(testMiddleware, noop, true)
