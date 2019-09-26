@@ -221,6 +221,8 @@ describe('testing the warning message', function () {
 
     function noop() { }
 
+    // Cases that SHOULD NOT fire a warning message.
+
     it('should respond with an empty string - global:false/local:undefined', function (done) {
         var middleware = keepOrSkip(testMiddleware, noop)
         middlewares.splice(1, 0, middleware)
@@ -248,20 +250,6 @@ describe('testing the warning message', function () {
             )
     })
 
-    it('should respond with a warning message - global:true/local:undefined', function (done) {
-        keepOrSkip.debug(true)
-        var middleware = keepOrSkip(testMiddleware, noop)
-        middlewares.splice(1, 0, middleware)
-        app.get('/', middlewares)
-        return request(app)
-            .get('/')
-            .expect(
-                200,
-                warningMsg,
-                done
-            )
-    })
-
     it('should respond with a warning message - global:true/local:false', function (done) {
         keepOrSkip.debug(true)
         var middleware = keepOrSkip(testMiddleware, noop, false)
@@ -272,6 +260,22 @@ describe('testing the warning message', function () {
             .expect(
                 200,
                 '',
+                done
+            )
+    })
+
+    // Cases that SHOULD fire a warning message.
+
+    it('should respond with a warning message - global:true/local:undefined', function (done) {
+        keepOrSkip.debug(true)
+        var middleware = keepOrSkip(testMiddleware, noop)
+        middlewares.splice(1, 0, middleware)
+        app.get('/', middlewares)
+        return request(app)
+            .get('/')
+            .expect(
+                200,
+                warningMsg,
                 done
             )
     })
