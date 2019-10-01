@@ -175,6 +175,45 @@ describe('testing the middlewares execution', function () {
             })
     })
 
+    it('should throw an error if the middleware execution sequence is incorrect 2', function (done) {
+        var app = express()
+        var m1 = makeMiddleware('m1')
+        var m2 = makeMiddleware('m2')
+        var val = 'keep'
+        var wm1 = keepOrSkip(m1, function () {
+            return val === 'keep'
+        })
+        var wm2 = keepOrSkip(m2, function () {
+            return val !== 'keep'
+        })
+        var seq = ['m1', 'm2', 'm1', 'm2', 'm1']
+
+        app.get('/',
+            init,
+            wm1, // run
+            m2, // run
+            wm1, // run
+            m2, // run
+            wm2, // skip
+            wm1, // run
+            respond
+        )
+
+        return request(app)
+            .get('/')
+            .set('Accept', 'application/json')
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    done(err)
+                }
+                if (seq.toString() !== res.body.toString()) {
+                    done(new Error('Wrong middleware execution sequence'))
+                }
+                done()
+            })
+    })
+
 })
 
 describe('testing the warning message', function () {
