@@ -69,10 +69,13 @@ function respond(req, res, next) {
     })
 }
 
+const maybeMiddlewareOne = keepOrSkip(middlewareOne, req => req.value < 0)
+const maybeMiddlewareTwo = keepOrSkip(middlewareTwo, req => req.value >= 0)
+
 app.get('/',
     setValue,
-    keepOrSkip(middlewareOne, req => req.value < 0),
-    keepOrSkip(middlewareTwo, req => req.value >= 0),
+    maybeMiddlewareOne,
+    maybeMiddlewareTwo,
     respond
 )
 
