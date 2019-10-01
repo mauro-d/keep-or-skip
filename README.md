@@ -19,38 +19,11 @@ specific request value.
 
 ## Installation
 
-You can choose one of the following methods:
-
-### First method
-
-In your *package.json* add the following item to get the latest available version:
-
-```json
-"keep-or-skip": "*"
-```
-
-or, if you need a specific version, just add an item like the following,
-specifying the version number:
-
-```json
-"keep-or-skip": "1.0.5"
-```
-
-then launch this command:
-
 ```console
-npm install
+npm i keep-or-skip --save
 ```
 
-### Second method
-
-Just launch this command:
-
-```console
-npm install keep-or-skip --save
-```
-
-## Type signature
+## API
 
 ```javascript
 keepOrSkip(middlewares, predicate[, debug])
@@ -64,7 +37,7 @@ keepOrSkip(middlewares, predicate[, debug])
 If the parameters' type does not match with those required, an error will be
 thrown. In pariticular, the error will be an instance of **KeepOrSkipError**.
 
-## Examples
+## Example
 
 Consider the following example:
 
@@ -98,8 +71,8 @@ function respond(req, res, next) {
 
 app.get('/',
     setValue,
-    keepOrSkip(middlewareOne, req => req.value < 0 ? true : false),
-    keepOrSkip(middlewareTwo, req => req.value >= 0 ? true : false),
+    keepOrSkip(middlewareOne, req => req.value < 0),
+    keepOrSkip(middlewareTwo, req => req.value >= 0),
     respond
 )
 
