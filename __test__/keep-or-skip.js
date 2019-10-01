@@ -128,8 +128,12 @@ describe('testing the middlewares execution', function () {
         var app = express()
         var m1 = makeMiddleware('m1')
         var m2 = makeMiddleware('m2')
-        var wm1 = keepOrSkip(m1, req => req.value < 0)
-        var wm2 = keepOrSkip(m2, req => req.value >= 0)
+        var wm1 = keepOrSkip(m1, function (req) {
+            return req.value < 0
+        })
+        var wm2 = keepOrSkip(m2, function (req) {
+            return req.value >= 0
+        })
         var seq = ['m1', 'm1', 'm2', 'm1', 'm2', 'm2', 'm1']
 
         app.get('/',
