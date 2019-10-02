@@ -2,9 +2,9 @@
 
 ## Dynamically execute or skip express middlewares
 
-This wrapper allows you to choose one or more middlewares to execute based on a
+This wrapper allows you to choose one or more middlewares whose execution is based on a
 certain condition. The aforementioned condition could be, for instance, a
-specific request value.
+specific *request* value.
 
 <br/>
 
@@ -29,9 +29,9 @@ npm i keep-or-skip --save
 keepOrSkip(middlewares, predicate[, debug])
 ```
 
-- `middlewares` &lt;Function&gt; | &lt;Function[]&gt; A middleware or an array of middlewares to handle dynamically.
-- `predicate` &lt;Function&gt; A function that returns a *boolean* value, by which, one or more middlewares will be executed or skipped. This function takes as input two *optional* parameters, the `request` and the `response` objects. If the predicate doesn't return a boolean value, the middleware/middlewares contained in the `middlewares` parameter will be skipped.
-- `debug` &lt;Boolean&gt; An *optional* boolean parameter to enable a warning log which notifies that the `predicate` parameter doesn't return a boolean value. **Default**: *false*.
+- `middlewares` &lt;Function&gt; | &lt;Function[]&gt; A middleware or an array of middlewares to be handled dynamically.
+- `predicate` &lt;Function&gt; A function returning a *boolean* value affecting the execution of the speciefied `middlewares`. This function takes as input two *optional* parameters, the `request` and the `response` objects. If the predicate does not return a boolean value, `middlewares` will be skipped.
+- `debug` &lt;Boolean&gt; An *optional* boolean parameter enabling a warning log which notifies whether `predicate` returned a boolean value. **Default**: *false*.
 - **returns** An array of middlewares.
 
 If the parameters' type does not match with those required, an error will be
@@ -95,9 +95,8 @@ skipped and `middlewareTwo` is executed:
 
 ## Debug
 
-In the case the `predicate` parameter doesn't return a boolean value, the
-middleware/middlewares contained in the `middlewares` parameter will be skipped.
-In this situation, it's possible to log a warning by using the debug mode.
+In case `predicate` does not return a boolean value, `middlewares` will be skipped.
+In this situation it's possible to log a warning by using the debug mode.
 
 It's possible to activate the debug globally, directly on the imported module:
 
@@ -106,8 +105,8 @@ const keepOrSkip = require('keep-or-skip')
 keepOrSkip.debug(true)
 ```
 
-the above code will set the debug mode to *true* every time `keepOrSkip` will be
-used, unless otherwise specified at the time of use as shown in the following
+the above code sets the debug mode to *true* every time `keepOrSkip` is
+used unless otherwise specified in the single calls as shown in the following
 example:
 
 ```javascript
