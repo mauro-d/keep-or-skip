@@ -48,24 +48,23 @@ const keepOrSkip = require('keep-or-skip')
 const app = express()
 
 function setValue(req, res, next) {
-    req.value = 0
-    req.messages = []
+    req.value = 1
     next()
 }
 
 function middlewareOne(req, res, next) {
-    req.messages.push('Hi from middlewareOne')
+    req.message = 'Hi from middlewareOne'
     next()
 }
 
 function middlewareTwo(req, res, next) {
-    req.messages.push('Hi from middlewareTwo')
+    req.message = 'Hi from middlewareTwo'
     next()
 }
 
 function respond(req, res, next) {
     res.status(200).json({
-        messages: req.messages
+        message: req.message
     })
 }
 
@@ -87,9 +86,7 @@ skipped and `middlewareTwo` is executed:
 
 ```json
 {
-    "messages": [
-        "Hi from middlewareTwo"
-    ]
+    "message": "Hi from middlewareTwo"
 }
 ```
 
