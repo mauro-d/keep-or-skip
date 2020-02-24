@@ -112,10 +112,7 @@ const keepOrSkip = require('keep-or-skip')
 // Set debug mode globally.
 keepOrSkip.debug(true)
 
-/**
- * Specifying the debug parameter at the time of use will overwrite the global debug variable.
- */
-
+// Specifying the debug parameter at the time of use will overwrite the global debug variable.
 keepOrSkip(myMiddlewares, myPredicate, false) // Debug OFF.
 
 keepOrSkip(myMiddlewares, myPredicate) // Debug ON because of the global debug variable.
