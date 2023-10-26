@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.6 / 2023-10-26
+
+* Bumped express version(dev dependency).
+
+* Added more Node.js version for testing.
+
 ## 1.0.5 / 2019-08-28
 
 * Library refactor.
