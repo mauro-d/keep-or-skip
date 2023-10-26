@@ -10,7 +10,7 @@ specific *request* value.
 
 <div align="center">
 
-[![CI](https://github.com/mauro-d/keep-or-skip/workflows/ci/badge.svg?branch=main)](https://github.com/mauro-d/keep-or-skip/actions/workflows/ci.yml)
+[![CI](https://github.com/mauro-d/keep-or-skip/workflows/ci/badge.svg)](https://github.com/mauro-d/keep-or-skip/actions/workflows/ci.yml)
 [![NPM version](https://img.shields.io/npm/v/keep-or-skip.svg?style=flat)](https://www.npmjs.com/package/keep-or-skip)
 [![NPM downloads](https://img.shields.io/npm/dm/keep-or-skip.svg?style=flat)](https://www.npmjs.com/package/keep-or-skip)
 
