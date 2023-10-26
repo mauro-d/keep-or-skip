@@ -1,7 +1,7 @@
 {
   "name": "keep-or-skip",
   "description": "Dynamically execute or skip express middlewares",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "contributors": [
     {
       "name": "Mauro Doganieri",
