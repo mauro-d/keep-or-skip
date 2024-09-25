@@ -6,3 +6,7 @@
 node_modules
 # Remove all debug loggin file created by node
 npm-debug.log
+# Remove all files created by tap
+.tap
+# Remove all files created by the transpilation
+dist

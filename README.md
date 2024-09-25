@@ -1,12 +1,11 @@
 # keep-or-skip
 
-## Dynamically execute or skip express middlewares
+## Overview
 
-This wrapper allows you to choose one or more middlewares whose execution is based on a
-certain condition. The aforementioned condition could be, for instance, a
-specific *request* value.
-
-<br/>
+**`keep-or-skip`** is an utility for Express.js that conditionally executes one 
+or more middleware functions based on dynamic conditions. For instance, this 
+could be useful to execute middleware if a specific request parameter meets a 
+certain condition.
 
 <div align="center">
 
@@ -18,27 +17,34 @@ specific *request* value.
 
 ## Installation
 
-```console
-npm i keep-or-skip --save
+```bash
+npm i keep-or-skip
 ```
 
 ## API
 
 ```javascript
-keepOrSkip(middlewares, predicate[, debug])
+keepOrSkip(middlewares, predicate)
 ```
 
-- `middlewares` &lt;Function&gt; | &lt;Function[]&gt; A middleware or an array of middlewares to be handled dynamically.
-- `predicate` &lt;Function&gt; A function returning a *boolean* value affecting the execution of the speciefied `middlewares`. This function takes as input two *optional* parameters, the `request` and the `response` objects. If the predicate does not return a boolean value, `middlewares` will be skipped.
-- `debug` &lt;Boolean&gt; An *optional* boolean parameter enabling a warning log which notifies whether `predicate` returned a boolean value. **Default**: *false*.
-- **returns** An array of middlewares.
+**Parameters**:
 
-If the parameters' type does not match with those required, an error will be
-thrown. In pariticular, the error will be an instance of **KeepOrSkipError**.
+- `middlewares` *\<Function\> | \<Function[]\>* a single middleware function or 
+an array of middleware functions that should be conditionally applied.
 
-## Example
+- `predicate` *\<Function\>* a function that returns a boolean value based on 
+the provided inputs. This function determines whether `middlewares` should be 
+executed. The predicate can use any relevant information from the `request` and 
+the `response` objects, or other factors. If the predicate does not return a 
+boolean value, `middlewares` will be skipped.
 
-Consider the following example:
+**Returns**: *\<Function\> | \<Function[]\>* an array of middlewares.
+
+## Usage
+
+### Basic Example
+
+Here's a simple example using `keep-or-skip` in an Express application:
 
 ```javascript
 const express = require('express')
@@ -46,73 +52,70 @@ const keepOrSkip = require('keep-or-skip')
 
 const app = express()
 
-function setValue(req, res, next) {
-    req.value = 1
+function setRandomValue(req, res, next) {
+    req.randomNumber = Math.floor(Math.random() * 100) // Generate a random number between 0 and 99
     next()
 }
 
-function middlewareOne(req, res, next) {
-    req.message = 'Hi from middlewareOne'
+function isEven(req, res, next) {
+    req.isEven = req.randomNumber % 2 === 0 // Determine if the number is even
     next()
 }
 
-function middlewareTwo(req, res, next) {
-    req.message = 'Hi from middlewareTwo'
+function handleEven(req, res, next) {
+    req.message = 'The number is even.'
     next()
 }
 
-function respond(req, res, next) {
+function handleOdd(req, res, next) {
+    req.message = 'The number is odd.'
+    next()
+}
+
+function respond(req, res) {
     res.status(200).json({
+        number: req.randomNumber,
         message: req.message
     })
 }
 
-const maybeMiddlewareOne = keepOrSkip(middlewareOne, req => req.value < 0)
-const maybeMiddlewareTwo = keepOrSkip(middlewareTwo, req => req.value >= 0)
+const maybeHandleEven = keepOrSkip(handleEven, req => req.isEven)
+const maybeHandleOdd = keepOrSkip(handleOdd, req => !req.isEven)
 
-app.get('/',
-    setValue,
-    maybeMiddlewareOne,
-    maybeMiddlewareTwo,
+app.get('/random',
+    setRandomValue,
+    isEven,
+    maybeHandleEven,
+    maybeHandleOdd,
     respond
 )
 
-app.listen(3000)
+app.listen(3000, () => console.log('Server running on port 3000'))
 ```
 
-`http://localhost:3000` will produce the following result, `middlewareOne` is
-skipped and `middlewareTwo` is executed:
+#### Behavior
+
+When accessing `http://localhost:3000/random`, a random number between 0 and 99 
+is generated. Depending on whether the number is even or odd, either 
+`handleEven` or `handleOdd` will be executed. The response will include the 
+number and the corresponding message:
 
 ```json
 {
-    "message": "Hi from middlewareTwo"
+    "number": 42,
+    "message": "The number is even."
 }
 ```
 
-## Debug
+or
 
-In case `predicate` does not return a boolean value, `middlewares` will be skipped.
-In this situation it's possible to log a warning by using the debug mode.
-
-It's possible to activate the debug globally, directly on the imported module:
-
-```javascript
-const keepOrSkip = require('keep-or-skip')
-keepOrSkip.debug(true)
+```json
+{
+    "number": 37,
+    "message": "The number is odd."
+}
 ```
 
-the above code sets the debug mode to *true* every time `keepOrSkip` is
-used unless otherwise specified in the single calls as shown in the following
-example:
+## Error Handling
 
-```javascript
-const keepOrSkip = require('keep-or-skip')
-
-// Set debug mode globally.
-keepOrSkip.debug(true)
-
-// Specifying the debug parameter at the time of use will overwrite the global debug variable.
-keepOrSkip(myMiddlewares, myPredicate, false) // Debug OFF.
-
-keepOrSkip(myMiddlewares, myPredicate) // Debug ON because of the global debug variable.
-```
+`KeepOrSkipError` is thrown when the parameters passed to `keepOrSkip` are invalid.

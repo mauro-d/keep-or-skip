@@ -1,6 +1,6 @@
 {
   "name": "keep-or-skip",
-  "description": "Dynamically execute or skip express middlewares",
+  "description": "Conditionally execute or skip Express middlewares",
   "version": "1.0.7",
   "contributors": [
     {
@@ -22,9 +22,12 @@
   ],
   "license": "Apache-2.0",
   "scripts": {
-    "test": "node node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=__test__/jasmine.json",
-    "test-travis": "node node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=__test__/jasmine.json",
-    "test-appveyor": "node ./node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=__test__/jasmine.json"
+    "test": "npm i && npm run lint && npm run unit",
+    "lint": "npm run lint:standard &&  npm run lint:markdown",
+    "lint:fix": "standard --fix",
+    "lint:markdown": "markdownlint-cli2",
+    "lint:standard": "standard | snazzy",
+    "unit": "tap"
   },
   "engines": {
     "node": ">= 0.10.0"
@@ -37,9 +40,12 @@
     "url": "https://github.com/mauro-d/keep-or-skip/issues"
   },
   "devDependencies": {
-    "express": "^4.18.2",
-    "jasmine": "^3.4.0",
-    "supertest": "^4.0.2"
+    "express": "^5.0.0",
+    "markdownlint-cli2": "^0.14.0",
+    "snazzy": "^9.0.0",
+    "standard": "^17.1.2",
+    "supertest": "^7.0.0",
+    "tap": "^21.0.1"
   },
   "files": [
     "LICENSE",
